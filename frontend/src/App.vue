@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { QrCode } from '@lucide/vue';
 import GenerateTab from './components/GenerateTab.vue';
 import ScanTab from './components/ScanTab.vue';
 
@@ -36,13 +37,7 @@ onUnmounted(() => {
     <div class="relative z-10 w-full flex flex-col items-center">
       <header class="mb-12 text-center">
       <div class="inline-block mb-4 p-4 rounded-lg bg-zinc-900 border border-zinc-800">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <rect x="7" y="7" width="3" height="3"></rect>
-          <rect x="14" y="7" width="3" height="3"></rect>
-          <rect x="7" y="14" width="3" height="3"></rect>
-          <rect x="14" y="14" width="3" height="3"></rect>
-        </svg>
+        <QrCode class="h-8 w-8 text-blue-500" />
       </div>
       <h1 class="text-3xl font-semibold text-zinc-100 tracking-tight">
         QR Studio
