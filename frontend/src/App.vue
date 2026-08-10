@@ -1,15 +1,40 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import GenerateTab from './components/GenerateTab.vue';
 import ScanTab from './components/ScanTab.vue';
 
 const activeTab = ref('generate'); // 'generate' or 'scan'
+
+const mouseX = ref(0);
+const mouseY = ref(0);
+
+const handleMouseMove = (e) => {
+  mouseX.value = e.clientX;
+  mouseY.value = e.clientY;
+};
+
+onMounted(() => {
+  window.addEventListener('mousemove', handleMouseMove);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', handleMouseMove);
+});
 </script>
 
 <template>
-  <div class="min-h-screen bg-zinc-950 text-zinc-100 font-sans flex flex-col items-center py-12 px-4 selection:bg-blue-600 selection:text-white">
+  <div class="relative min-h-screen bg-zinc-950 text-zinc-100 font-sans flex flex-col items-center py-12 px-4 selection:bg-blue-600 selection:text-white overflow-hidden">
     
-    <header class="mb-12 text-center">
+    <!-- Dynamic Spotlight Effect -->
+    <div 
+      class="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
+      :style="{
+        background: `radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(59, 130, 246, 0.12), transparent 40%)`
+      }"
+    ></div>
+
+    <div class="relative z-10 w-full flex flex-col items-center">
+      <header class="mb-12 text-center">
       <div class="inline-block mb-4 p-4 rounded-lg bg-zinc-900 border border-zinc-800">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -59,7 +84,7 @@ const activeTab = ref('generate'); // 'generate' or 'scan'
     <footer class="mt-16 text-zinc-500 text-xs tracking-wide uppercase">
       Built with Vue & Go
     </footer>
-
+    </div>
   </div>
 </template>
 
