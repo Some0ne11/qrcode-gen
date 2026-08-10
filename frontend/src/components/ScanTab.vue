@@ -6,6 +6,33 @@ const isScanning = ref(false);
 const scanError = ref(null);
 const selectedFile = ref(null);
 const selectedFilePreview = ref(null);
+const isCopied = ref(false);
+
+const copyToClipboard = async () => {
+  try {
+    await navigator.clipboard.writeText(scanResult.value);
+    isCopied.value = true;
+    setTimeout(() => {
+      isCopied.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+    // Fallback if clipboard API fails
+    const textArea = document.createElement("textarea");
+    textArea.value = scanResult.value;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      isCopied.value = true;
+      setTimeout(() => isCopied.value = false, 2000);
+    } catch (err) {
+      console.error('Fallback copy failed', err);
+    }
+    document.body.removeChild(textArea);
+  }
+};
 
 const handleFileSelect = (event) => {
   const file = event.target.files[0];
@@ -99,11 +126,13 @@ const handleScan = async () => {
         <div class="relative group">
           <p class="text-zinc-100 text-base break-words pr-8">{{ scanResult }}</p>
           <button 
-            @click="navigator.clipboard.writeText(scanResult)" 
-            class="absolute top-0 right-0 p-1 text-zinc-500 hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+            @click="copyToClipboard" 
+            class="absolute top-0 right-0 p-1 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+            :class="isCopied ? 'text-green-500' : 'text-zinc-500 hover:text-blue-500'"
             title="Copy to clipboard"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+            <svg v-if="isCopied" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
           </button>
         </div>
       </div>
