@@ -2,12 +2,12 @@
 
 A full-stack, modern web application for generating and scanning QR codes.
 
-## Architecture
+## 🏗️ Architecture
 
 This project is separated into two distinct services to allow for better maintainability and scalability:
 
-*   **`frontend/`**: The client-side interface built with Vue 3, Vite, and Tailwind CSS v4.
-*   **`backend/`**: The REST API built with Go, utilizing the `go-chi` router.
+*   🌐 **`frontend/`**: The client-side interface built with ![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=flat&logo=vuedotjs&logoColor=4FC08D) ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=flat&logo=vite&logoColor=FFD62E) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
+*   ⚙️ **`backend/`**: The REST API built with ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white) utilizing the `go-chi` router.
 
 ### Project Structure
 
