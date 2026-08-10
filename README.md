@@ -43,9 +43,9 @@ qrcode-genapp/
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Local Development
 
-To run this application locally, you will need to start both the Go backend and the Vue frontend development servers.
+To run this application locally on your machine, you need to start both the Go backend and the Vue frontend development servers.
 
 ### 1. Backend (Go) Setup
 
@@ -89,7 +89,7 @@ The frontend provides a sleek, dark-mode user interface with tabs for Generating
     ```
 3.  Configure environment variables:
     *   Create a `.env` file in the `frontend/` directory.
-    *   Specify the full URL of your Go backend so the frontend knows where to send API requests:
+    *   Specify the local URL of your Go backend so the frontend knows where to send API requests:
         ```env
         VITE_API_BASE_URL=http://localhost:8080
         ```
@@ -98,6 +98,32 @@ The frontend provides a sleek, dark-mode user interface with tabs for Generating
     pnpm dev
     ```
     *The application will be accessible at `http://localhost:5173` (or whichever port Vite assigns).*
+
+---
+
+## ☁️ Cloud Deployment
+
+For production, it is highly recommended to decouple the frontend and backend using standard cloud hosting providers.
+
+### 1. Deploying the Backend (Go)
+The Go backend can be deployed as a standard web service on platforms like **Render**, **Railway**, or **Heroku**.
+
+1.  Connect your Git repository to your chosen platform.
+2.  Set the root directory of the service to `backend/`.
+3.  The platform should automatically detect it as a Go application and build it.
+4.  Once deployed, copy the live URL of your backend service (e.g., `https://qr-api.onrender.com`).
+5.  **Security Tip**: Update the `cors` settings in `backend/main.go` to explicitly allow traffic from your future frontend domain, rather than `*`.
+
+### 2. Deploying the Frontend (Vue)
+The Vue frontend is a statically generated site that is perfect for platforms like **Vercel**, **Netlify**, or **Cloudflare Pages**.
+
+1.  Connect your Git repository to your chosen platform.
+2.  Set the root directory of the site to `frontend/`.
+3.  Set the Build Command to `pnpm build` (or `npm run build`) and the Output Directory to `dist`.
+4.  Add an Environment Variable on the hosting platform:
+    *   **Key**: `VITE_API_BASE_URL`
+    *   **Value**: The live URL of your deployed Go backend (e.g., `https://qr-api.onrender.com`).
+5.  Deploy the site! The frontend will now securely communicate with your live backend.
 
 ---
 
