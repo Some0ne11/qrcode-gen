@@ -14,7 +14,7 @@ const handleGenerate = async () => {
   generateResultUrl.value = null;
 
   try {
-    const response = await fetch('/api/generate', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/generate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

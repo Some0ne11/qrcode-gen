@@ -28,7 +28,7 @@ const handleScan = async () => {
   formData.append('image', selectedFile.value);
 
   try {
-    const response = await fetch('/api/scan', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/scan`, {
       method: 'POST',
       body: formData
     });
