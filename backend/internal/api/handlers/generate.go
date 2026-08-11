@@ -50,6 +50,11 @@ func HandleGenerate(w http.ResponseWriter, r *http.Request) {
 		}
 	case "text":
 		// text can be anything as long as it's not empty
+	case "location":
+		if !strings.HasPrefix(req.Text, "https://www.google.com/maps/place/@") {
+			RespondWithError(w, http.StatusBadRequest, "Invalid location format: missing Google Maps URL prefix")
+			return
+		}
 	default:
 		// If type is empty or unknown, we just fall back to accepting any non-empty text
 	}
