@@ -1,5 +1,7 @@
 # QR Studio
 
+![QR Studio Preview](frontend/public/preview.png)
+
 A full-stack, modern web application for generating and scanning QR codes.
 
 ## ✨ Features
