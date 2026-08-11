@@ -2,6 +2,13 @@
 
 A full-stack, modern web application for generating and scanning QR codes.
 
+## ✨ Features
+
+*   **Generate 5 Formats**: Easily generate QR codes for Links (URLs), Plain Text, Contacts (vCards), Phone Numbers, and WiFi Networks.
+*   **Scan & Decode**: Upload any QR code image (PNG/JPEG) to instantly decode and copy its contents.
+*   **Dynamic Theme**: Flawless Light and Dark mode toggle that remembers your preference.
+*   **Strict Validation**: Robust frontend and backend validation ensures your QR codes are always generated correctly.
+
 ## 🏗️ Architecture
 
 This project is separated into two distinct services to allow for better maintainability and scalability:
@@ -32,6 +39,8 @@ qrcode-genapp/
     ├── src/
     │   ├── assets/           # CSS and styles (Tailwind import)
     │   ├── components/       # Reusable Vue components
+    │   │   ├── forms/        # Dynamic form components (URL, Text, WiFi, etc.)
+    │   │   ├── ui/           # Reusable UI elements (Modals, etc.)
     │   │   ├── GenerateTab.vue # QR generation UI & logic
     │   │   └── ScanTab.vue     # QR scanner UI & logic
     │   ├── App.vue           # Main layout and tab controller
@@ -133,7 +142,7 @@ The Go backend exposes two primary endpoints:
 
 ### `POST /api/generate`
 Generates a QR code PNG image from the provided text.
-*   **Request Body**: `{"text": "https://example.com"}`
+*   **Request Body**: `{"type": "url", "text": "https://example.com"}` (Supported types: `url`, `text`, `contact`, `phone`, `wifi`)
 *   **Response**: `image/png` binary data.
 
 ### `POST /api/scan`
