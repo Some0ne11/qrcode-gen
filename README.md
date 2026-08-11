@@ -4,7 +4,7 @@ A full-stack, modern web application for generating and scanning QR codes.
 
 ## ✨ Features
 
-*   **Generate 5 Formats**: Easily generate QR codes for Links (URLs), Plain Text, Contacts (vCards), Phone Numbers, and WiFi Networks.
+*   **Generate 6 Formats**: Easily generate QR codes for Links (URLs), Plain Text, Contacts (vCards), Phone Numbers, WiFi Networks, and Locations (Map).
 *   **Scan & Decode**: Upload any QR code image (PNG/JPEG) to instantly decode and copy its contents.
 *   **Dynamic Theme**: Flawless Light and Dark mode toggle that remembers your preference.
 *   **Strict Validation**: Robust frontend and backend validation ensures your QR codes are always generated correctly.
@@ -142,7 +142,7 @@ The Go backend exposes two primary endpoints:
 
 ### `POST /api/generate`
 Generates a QR code PNG image from the provided text.
-*   **Request Body**: `{"type": "url", "text": "https://example.com"}` (Supported types: `url`, `text`, `contact`, `phone`, `wifi`)
+*   **Request Body**: `{"type": "url", "text": "https://example.com"}` (Supported types: `url`, `text`, `contact`, `phone`, `wifi`, `location`)
 *   **Response**: `image/png` binary data.
 
 ### `POST /api/scan`
