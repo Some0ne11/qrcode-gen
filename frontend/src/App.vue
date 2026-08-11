@@ -62,9 +62,9 @@ const toggleTheme = () => {
       <Moon v-else class="h-5 w-5" />
     </button>
 
-    <!-- Dynamic Spotlight Effect (Only visible in dark mode for better contrast, or adjust for light) -->
+    <!-- Dynamic Spotlight Effect -->
     <div 
-      class="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300 opacity-0 dark:opacity-100"
+      class="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
       :style="{
         background: `radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(59, 130, 246, 0.12), transparent 40%)`
       }"
