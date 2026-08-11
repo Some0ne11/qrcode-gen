@@ -39,8 +39,13 @@ func HandleGenerate(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case "contact":
-		if !strings.HasPrefix(req.Text, "BEGIN:VCARD") || !strings.Contains(req.Text, "FN:") {
-			RespondWithError(w, http.StatusBadRequest, "Invalid contact format: missing Full Name")
+		if !strings.HasPrefix(req.Text, "BEGIN:VCARD") || 
+		   !strings.Contains(req.Text, "FN:") || 
+		   !strings.Contains(req.Text, "ORG:") || 
+		   !strings.Contains(req.Text, "TEL:") || 
+		   !strings.Contains(req.Text, "EMAIL:") || 
+		   !strings.Contains(req.Text, "ADR:") {
+			RespondWithError(w, http.StatusBadRequest, "Invalid contact format: missing required fields")
 			return
 		}
 	case "text":

@@ -63,8 +63,11 @@ const isFormValid = computed(() => {
       if (wifiData.value.protocol !== 'nopass' && !wifiData.value.password.trim()) return false;
       return true;
     case 'contact':
-      // At least fullname must be provided
-      return !!contactData.value.fullname.trim();
+      return !!contactData.value.fullname.trim() && 
+             !!contactData.value.org.trim() &&
+             !!contactData.value.phone.trim() &&
+             !!contactData.value.email.trim() &&
+             !!contactData.value.address.trim();
     default:
       return false;
   }
