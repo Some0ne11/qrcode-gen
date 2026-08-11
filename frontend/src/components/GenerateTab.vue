@@ -113,11 +113,11 @@ const handleGenerate = async () => {
       
       <!-- Type Selector Dropdown -->
       <div>
-        <label for="qr-type" class="block text-sm font-medium text-zinc-300 mb-2">Select Format</label>
+        <label for="qr-type" class="block text-sm font-medium text-zinc-600 dark:text-zinc-300 mb-2">Select Format</label>
         <select 
           id="qr-type" 
           v-model="selectedType" 
-          class="w-full bg-zinc-950 border border-zinc-700 rounded-md px-4 py-2 text-zinc-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+          class="w-full bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-md px-4 py-2 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
         >
           <option value="url">Link (URL)</option>
           <option value="text">Plain Text</option>
@@ -128,7 +128,7 @@ const handleGenerate = async () => {
       </div>
 
       <!-- Dynamic Forms -->
-      <div class="pt-2 border-t border-zinc-800">
+      <div class="pt-2 border-t border-zinc-200 dark:border-zinc-800 transition-colors">
         <UrlForm v-if="selectedType === 'url'" :data="urlData" @submit="handleGenerate" />
         <TextForm v-if="selectedType === 'text'" :data="textData" />
         <PhoneForm v-if="selectedType === 'phone'" :data="phoneData" @submit="handleGenerate" />
@@ -155,7 +155,7 @@ const handleGenerate = async () => {
       </div>
 
       <!-- Result -->
-      <div v-if="generateResultUrl" class="mt-6 flex flex-col items-center p-6 bg-zinc-950/50 rounded-lg border border-zinc-800">
+      <div v-if="generateResultUrl" class="mt-6 flex flex-col items-center p-6 bg-zinc-50 dark:bg-zinc-950/50 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-colors">
         <img :src="generateResultUrl" alt="Generated QR Code" class="w-48 h-48 rounded-md mb-4 bg-white p-2" />
         <a 
           :href="generateResultUrl" 
