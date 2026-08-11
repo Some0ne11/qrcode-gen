@@ -32,11 +32,11 @@ const mapUrl = computed(() => {
 });
 
 onMounted(() => {
-  // Default coordinates (e.g., center of the world or specific default location)
-  const defaultLat = props.data.lat !== null ? props.data.lat : 51.505;
-  const defaultLng = props.data.lng !== null ? props.data.lng : -0.09;
+  // Default coordinates (Malaysia)
+  const defaultLat = props.data.lat !== null ? props.data.lat : 4.2105;
+  const defaultLng = props.data.lng !== null ? props.data.lng : 101.9758;
 
-  map = L.map(mapContainer.value).setView([defaultLat, defaultLng], 2);
+  map = L.map(mapContainer.value).setView([defaultLat, defaultLng], props.data.lat !== null ? 15 : 6);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
