@@ -31,10 +31,10 @@ defineProps({
     </div>
     <div>
       <label class="block text-sm font-medium text-zinc-400 mb-1">Address <span class="text-red-500">*</span></label>
-      <input v-model="data.address" type="text" placeholder="123 Main St, City, Country" class="w-full bg-zinc-950 border border-zinc-700 rounded-md px-4 py-2 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200" />
+      <textarea v-model="data.address" rows="2" placeholder="123 Main St, City, Country" class="w-full bg-zinc-950 border border-zinc-700 rounded-md px-4 py-2 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 resize-none"></textarea>
     </div>
     <div>
-      <label class="block text-sm font-medium text-zinc-400 mb-1">Notes</label>
+      <label class="block text-sm font-medium text-zinc-400 mb-1">Notes (Optional)</label>
       <textarea v-model="data.notes" rows="2" placeholder="Extra information..." class="w-full bg-zinc-950 border border-zinc-700 rounded-md px-4 py-2 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 resize-none"></textarea>
     </div>
   </div>
