@@ -5,3 +5,5 @@
 @theme inline {
     --font-sans: 'Geist Variable', sans-serif;
 }
+
+@custom-variant dark (&:is(.dark *));
