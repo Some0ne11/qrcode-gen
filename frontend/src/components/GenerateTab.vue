@@ -1,14 +1,77 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Loader2, Download } from '@lucide/vue';
+import UrlForm from './forms/UrlForm.vue';
+import TextForm from './forms/TextForm.vue';
+import PhoneForm from './forms/PhoneForm.vue';
+import WifiForm from './forms/WifiForm.vue';
+import ContactForm from './forms/ContactForm.vue';
 
-const generateText = ref('');
+const selectedType = ref('url');
+
+const urlData = ref({ value: '' });
+const textData = ref({ value: '' });
+const phoneData = ref({ number: '' });
+const wifiData = ref({ ssid: '', password: '', protocol: 'WPA' });
+const contactData = ref({ fullname: '', org: '', address: '', phone: '', email: '', notes: '' });
+
 const generateResultUrl = ref(null);
 const isGenerating = ref(false);
 const generateError = ref(null);
 
+const formattedText = computed(() => {
+  switch (selectedType.value) {
+    case 'url':
+      return urlData.value.value;
+    case 'text':
+      return textData.value.value;
+    case 'phone':
+      return phoneData.value.number ? `tel:${phoneData.value.number}` : '';
+    case 'wifi':
+      if (!wifiData.value.ssid) return '';
+      let str = `WIFI:S:${wifiData.value.ssid};T:${wifiData.value.protocol};`;
+      if (wifiData.value.protocol !== 'nopass' && wifiData.value.password) {
+        str += `P:${wifiData.value.password};`;
+      }
+      str += ';';
+      return str;
+    case 'contact':
+      if (!contactData.value.fullname) return '';
+      let vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${contactData.value.fullname}\n`;
+      if (contactData.value.org) vcard += `ORG:${contactData.value.org}\n`;
+      if (contactData.value.phone) vcard += `TEL:${contactData.value.phone}\n`;
+      if (contactData.value.email) vcard += `EMAIL:${contactData.value.email}\n`;
+      if (contactData.value.address) vcard += `ADR:;;${contactData.value.address}\n`;
+      if (contactData.value.notes) vcard += `NOTE:${contactData.value.notes}\n`;
+      vcard += `END:VCARD`;
+      return vcard;
+    default:
+      return '';
+  }
+});
+
+const isFormValid = computed(() => {
+  switch (selectedType.value) {
+    case 'url':
+      return !!urlData.value.value.trim();
+    case 'text':
+      return !!textData.value.value.trim();
+    case 'phone':
+      return !!phoneData.value.number.trim();
+    case 'wifi':
+      if (!wifiData.value.ssid.trim()) return false;
+      if (wifiData.value.protocol !== 'nopass' && !wifiData.value.password.trim()) return false;
+      return true;
+    case 'contact':
+      // At least fullname must be provided
+      return !!contactData.value.fullname.trim();
+    default:
+      return false;
+  }
+});
+
 const handleGenerate = async () => {
-  if (!generateText.value) return;
+  if (!isFormValid.value) return;
   
   isGenerating.value = true;
   generateError.value = null;
@@ -20,7 +83,10 @@ const handleGenerate = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text: generateText.value })
+      body: JSON.stringify({ 
+        type: selectedType.value,
+        text: formattedText.value 
+      })
     });
 
     if (!response.ok) {
@@ -41,22 +107,37 @@ const handleGenerate = async () => {
 <template>
   <div class="animate-in fade-in slide-in-from-bottom-2 duration-300">
     <div class="space-y-6">
+      
+      <!-- Type Selector Dropdown -->
       <div>
-        <label for="qr-text" class="block text-sm font-medium text-zinc-300 mb-2">Enter Text or URL</label>
-        <input 
-          id="qr-text" 
-          v-model="generateText" 
-          type="text" 
-          placeholder="https://example.com" 
-          class="w-full bg-zinc-950 border border-zinc-700 rounded-md px-4 py-2 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
-          @keyup.enter="handleGenerate"
-        />
+        <label for="qr-type" class="block text-sm font-medium text-zinc-300 mb-2">Select Format</label>
+        <select 
+          id="qr-type" 
+          v-model="selectedType" 
+          class="w-full bg-zinc-950 border border-zinc-700 rounded-md px-4 py-2 text-zinc-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+        >
+          <option value="url">Link (URL)</option>
+          <option value="text">Plain Text</option>
+          <option value="contact">Contact (vCard)</option>
+          <option value="phone">Phone Number</option>
+          <option value="wifi">WiFi Network</option>
+        </select>
       </div>
 
+      <!-- Dynamic Forms -->
+      <div class="pt-2 border-t border-zinc-800">
+        <UrlForm v-if="selectedType === 'url'" :data="urlData" @submit="handleGenerate" />
+        <TextForm v-if="selectedType === 'text'" :data="textData" />
+        <PhoneForm v-if="selectedType === 'phone'" :data="phoneData" @submit="handleGenerate" />
+        <WifiForm v-if="selectedType === 'wifi'" :data="wifiData" />
+        <ContactForm v-if="selectedType === 'contact'" :data="contactData" />
+      </div>
+
+      <!-- Action Button -->
       <button 
         @click="handleGenerate" 
-        :disabled="!generateText || isGenerating"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+        :disabled="!isFormValid || isGenerating"
+        class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
       >
         <span v-if="isGenerating" class="flex items-center justify-center">
           <Loader2 class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" />
@@ -65,7 +146,6 @@ const handleGenerate = async () => {
         <span v-else>Generate QR Code</span>
       </button>
 
-      <!-- Error -->
       <!-- Error -->
       <div v-if="generateError" class="p-3 bg-red-500/10 border border-red-500/20 rounded-md text-red-400 text-sm">
         {{ generateError }}
