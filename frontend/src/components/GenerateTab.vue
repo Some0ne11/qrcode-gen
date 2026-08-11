@@ -6,8 +6,38 @@ import TextForm from './forms/TextForm.vue';
 import PhoneForm from './forms/PhoneForm.vue';
 import WifiForm from './forms/WifiForm.vue';
 import ContactForm from './forms/ContactForm.vue';
+import ConfirmModal from './ui/ConfirmModal.vue';
 
 const selectedType = ref('url');
+const isConfirmModalOpen = ref(false);
+const pendingType = ref(null);
+
+const handleTypeChange = (event) => {
+  const newType = event.target.value;
+  if (generateResultUrl.value) {
+    // Revert visually immediately so it doesn't change until confirmed
+    event.target.value = selectedType.value;
+    pendingType.value = newType;
+    isConfirmModalOpen.value = true;
+    return;
+  }
+  selectedType.value = newType;
+  generateResultUrl.value = null;
+  generateError.value = null;
+};
+
+const confirmTypeChange = () => {
+  selectedType.value = pendingType.value;
+  generateResultUrl.value = null;
+  generateError.value = null;
+  isConfirmModalOpen.value = false;
+  pendingType.value = null;
+};
+
+const cancelTypeChange = () => {
+  isConfirmModalOpen.value = false;
+  pendingType.value = null;
+};
 
 const urlData = ref({ value: '' });
 const textData = ref({ value: '' });
@@ -116,7 +146,8 @@ const handleGenerate = async () => {
         <label for="qr-type" class="block text-sm font-medium text-zinc-600 dark:text-zinc-300 mb-2">Select Format</label>
         <select 
           id="qr-type" 
-          v-model="selectedType" 
+          :value="selectedType"
+          @change="handleTypeChange"
           class="w-full bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-md px-4 py-2 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
         >
           <option value="url">Link (URL)</option>
@@ -166,6 +197,18 @@ const handleGenerate = async () => {
           Download PNG
         </a>
       </div>
+      
+      <!-- Custom Confirm Modal -->
+      <ConfirmModal 
+        :isOpen="isConfirmModalOpen"
+        title="Discard QR Code?"
+        message="Your currently generated QR code will be lost. Please save it before continuing. Are you sure you want to change the format?"
+        confirmText="Discard & Change"
+        cancelText="Cancel"
+        @confirm="confirmTypeChange"
+        @cancel="cancelTypeChange"
+      />
+
     </div>
   </div>
 </template>
