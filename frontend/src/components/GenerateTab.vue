@@ -6,6 +6,7 @@ import TextForm from './forms/TextForm.vue';
 import PhoneForm from './forms/PhoneForm.vue';
 import WifiForm from './forms/WifiForm.vue';
 import ContactForm from './forms/ContactForm.vue';
+import LocationForm from './forms/LocationForm.vue';
 import ConfirmModal from './ui/ConfirmModal.vue';
 
 const selectedType = ref('url');
@@ -44,6 +45,7 @@ const textData = ref({ value: '' });
 const phoneData = ref({ number: '' });
 const wifiData = ref({ ssid: '', password: '', protocol: 'WPA' });
 const contactData = ref({ fullname: '', org: '', address: '', phone: '', email: '', notes: '' });
+const locationData = ref({ lat: null, lng: null });
 
 const generateResultUrl = ref(null);
 const isGenerating = ref(false);
@@ -75,6 +77,9 @@ const formattedText = computed(() => {
       if (contactData.value.notes) vcard += `NOTE:${contactData.value.notes}\n`;
       vcard += `END:VCARD`;
       return vcard;
+    case 'location':
+      if (locationData.value.lat === null || locationData.value.lng === null) return '';
+      return `https://www.google.com/maps/place/@${locationData.value.lat},${locationData.value.lng},15z`;
     default:
       return '';
   }
@@ -98,6 +103,8 @@ const isFormValid = computed(() => {
              !!contactData.value.phone.trim() &&
              !!contactData.value.email.trim() &&
              !!contactData.value.address.trim();
+    case 'location':
+      return locationData.value.lat !== null && locationData.value.lng !== null && !isNaN(locationData.value.lat) && !isNaN(locationData.value.lng);
     default:
       return false;
   }
@@ -155,6 +162,7 @@ const handleGenerate = async () => {
           <option value="contact">Contact (vCard)</option>
           <option value="phone">Phone Number</option>
           <option value="wifi">WiFi Network</option>
+          <option value="location">Location (Map)</option>
         </select>
       </div>
 
@@ -165,6 +173,7 @@ const handleGenerate = async () => {
         <PhoneForm v-if="selectedType === 'phone'" :data="phoneData" @submit="handleGenerate" />
         <WifiForm v-if="selectedType === 'wifi'" :data="wifiData" />
         <ContactForm v-if="selectedType === 'contact'" :data="contactData" />
+        <LocationForm v-if="selectedType === 'location'" :data="locationData" />
       </div>
 
       <!-- Action Button -->
